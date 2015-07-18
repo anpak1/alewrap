@@ -56,11 +56,10 @@ ALEInterface *ale_new(const char *rom_file) {
 //  boost::shared_ptr<remote_ALEInterface> tgt
   boost::shared_ptr<remote_ALEInterface> tgt
           = session.get<remote_ALEInterface>("nice player");
-  boost::shared_ptr<double[1024]> p1( new double[1024] );
   // get a remote pointer with name "tgt"
   // and use it like local object
-//  std::cout << session.call_timeout() << std::endl;
-//  tgt->play();
+  std::cout << session.call_timeout() << std::endl;
+  tgt->play();
 
   return new ALEInterface(rom_file);
 }

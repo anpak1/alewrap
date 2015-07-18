@@ -1,7 +1,7 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6 FATAL_ERROR)
 CMAKE_POLICY(VERSION 2.6)
 
-FILE(GLOB src *.cc *.h)
+FILE(GLOB src *.cc *.h *.cpp *.hpp)
 FILE(GLOB luasrc *.lua)
 SET(luasrc ${luasrc} alewrap.inl)
 
@@ -161,11 +161,18 @@ LINK_DIRECTORIES("${Remote_LIBRARY_DIR}")
 add_compile_options(-lz)
 set(CMAKE_SHARED_LINKER_FLAGS "-lz")
 
+set(alewrap_client
+	${Example_SRC_DIR}/remote_ALEInterface.cpp
+	${Example_SRC_DIR}/remote_ALEInterface.hpp
+	${Example_SRC_DIR}/alewrap.h
+	${Example_SRC_DIR}/alewrap.cc
+)
 
 MESSAGE( STATUS "Remote_LIBRARY:         " ${Remote_LIBRARY} )
 MESSAGE( STATUS "Remote_INCLUDE_DIR:         " ${Remote_INCLUDE_DIR} )
 MESSAGE( STATUS "Remote_LIBRARY_PATH_RELEASE:         " ${Remote_LIBRARY_PATH_RELEASE} )
 MESSAGE( STATUS "Boost_LIBRARIES:         " ${Boost_LIBRARIES} )
+
 
 #add_subdirectory("${Remote_INCLUDE_DIR}")
 #add_library(big ${other_srcs} $<TARGET_OBJECTS:${Remote_INCLUDE_DIR}>)
@@ -173,8 +180,8 @@ MESSAGE( STATUS "Boost_LIBRARIES:         " ${Boost_LIBRARIES} )
 ADD_TORCH_PACKAGE(alewrap "${src}" "${luasrc}" "ALE Wrapper")
 TARGET_LINK_LIBRARIES(alewrap "${XITARI_LIBRARY}")
 #TARGET_LINK_LIBRARIES(alewrap "${remote_LIBRARY}")
-TARGET_LINK_LIBRARIES(alewrap "${Remote_LIBRARY}")
-TARGET_LINK_LIBRARIES(alewrap  "${Boost_LIBRARIES}")
+TARGET_LINK_LIBRARIES(alewrap ${Remote_LIBRARY})
+TARGET_LINK_LIBRARIES(alewrap  ${Boost_LIBRARIES})
 
 # INCLUDE_DIRECTORIES(../../xiborg/xitari)
 # LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../../xiborg/xitari/build)
