@@ -21,6 +21,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 #include <cassert>
 #include <algorithm>
 
+#include "remote_ALEInterface.hpp"
+#include <remote/session.hpp>
+#include <remote/make_tcp_binding.hpp>
 
 void ale_fillRgbFromPalette(uint8_t *rgb, const uint8_t *obs, size_t rgb_size,
                             size_t obs_size) {
@@ -42,6 +45,23 @@ void ale_fillRgbFromPalette(uint8_t *rgb, const uint8_t *obs, size_t rgb_size,
 }
 
 ALEInterface *ale_new(const char *rom_file) {
+
+  remote::session session;
+  session.start(remote::make_tcp_binding("localhost", 8888));
+  if(session.wait_for_ready() != remote::session::started)
+    return 0;
+
+//  session.set_call_timeout( boost::chrono::milliseconds(10000));
+
+//  boost::shared_ptr<remote_ALEInterface> tgt
+  boost::shared_ptr<remote_ALEInterface> tgt
+          = session.get<remote_ALEInterface>("nice player");
+  boost::shared_ptr<double[1024]> p1( new double[1024] );
+  // get a remote pointer with name "tgt"
+  // and use it like local object
+//  std::cout << session.call_timeout() << std::endl;
+//  tgt->play();
+
   return new ALEInterface(rom_file);
 }
 
@@ -50,6 +70,9 @@ void ale_gc(ALEInterface *ale) { delete ale; }
 double ale_act(ALEInterface *ale, int action) {
   assert(action >= static_cast<int>(ale::PLAYER_A_NOOP) &&
          action <= static_cast<int>(ale::PLAYER_A_DOWNLEFTFIRE));
+  
+  std::cout << "!!!!ACTION: " << action << ",0\n" << std::endl;
+
   return ale->act(static_cast<ale::Action>(action));
 }
 
@@ -77,6 +100,8 @@ void ale_fillObs(const ALEInterface *ale, uint8_t *obs, size_t obs_size) {
   size_t h = screen.height();
   size_t w = screen.width();
   assert(obs_size == h * w);
+
+  std::cout << "!!!!SW: " << w << "SH:" << h << std::endl;
 
   std::copy(screen.getArray().begin(), screen.getArray().end(), obs);
 }

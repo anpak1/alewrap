@@ -1,0 +1,2 @@
+/home/anp/alewrap/build/alewrap/CMakeFiles/alewrap.dir
+/home/anp/alewrap/build/alewrap/CMakeFiles/alewrap_static.dir

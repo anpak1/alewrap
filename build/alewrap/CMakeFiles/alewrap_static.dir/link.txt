@@ -1,0 +1,2 @@
+/usr/bin/ar cr libalewrap.a  CMakeFiles/alewrap_static.dir/alewrap.cc.o
+/usr/bin/ranlib libalewrap.a
